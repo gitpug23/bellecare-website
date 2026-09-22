@@ -9,6 +9,22 @@ npm start         # builds, then previews at http://localhost:4173
 
 Deploy by uploading the contents of `dist/` to any static host (Netlify, Cloudflare Pages, GitHub Pages, S3). Nothing runs on a server.
 
+## Deploying with GitHub Pages
+
+`dist/` is gitignored, so Pages can't serve it directly from the repo. `.github/workflows/deploy.yml` builds it and deploys it instead, on every push to `main`.
+
+Turn it on once: repo **Settings → Pages → Source → GitHub Actions**. The next push to `main` deploys, and the Actions tab shows the live URL — `https://<owner>.github.io/<repo>/`.
+
+That URL sits under a subpath, not a domain root, so the workflow builds with `BASE_PATH` and `SITE_URL` set to that subpath (used by the 404 page's asset links and by the sitemap, canonical links and `og:url`; everything else on the site links relatively and needs no change). `npm run build` locally, without those variables, still targets the custom domain below.
+
+### Custom domain
+
+To serve this at `bellecare.ph` instead:
+
+1. At the registrar, point `bellecare.ph` at GitHub Pages (an `A`/`ALIAS` record to GitHub's IPs, or a `CNAME` for a `www` subdomain — see [GitHub's custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site)).
+2. Repo **Settings → Pages → Custom domain** → enter `bellecare.ph` → save. Once DNS resolves, tick **Enforce HTTPS**.
+3. Delete the `env:` block from `.github/workflows/deploy.yml`, so `SITE_URL` and `BASE_PATH` fall back to the domain-root defaults already in `src/site.mjs`.
+
 ## Before you publish
 
 Everything marked SAMPLE is a stand-in. `npm run build` prints the list. Only these come from the brand guide: the name, address, hours (6 AM to 5 PM), the Annual Physical Exam Package at ₱1,450, Dra. Villanueva's Tuesday and Thursday schedule, and the second-floor room numbers.

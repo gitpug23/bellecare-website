@@ -7,7 +7,7 @@ import { createServer } from 'node:http';
 import { dirname, extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { site } from './src/site.mjs';
+import { site, basePath } from './src/site.mjs';
 import { sampleNotes } from './src/data.mjs';
 import { layout } from './src/layout.mjs';
 import home from './src/pages/index.mjs';
@@ -29,11 +29,12 @@ function build() {
   const pages = [home, services, doctors, packages, results, book].map((p) => p());
   for (const page of pages) writeFileSync(join(dist, page.file), layout(page));
 
-  // The 404 page can be served from any depth, so its links must not be relative.
+  // The 404 page can be served from any depth, so its links must not be page-relative.
+  // basePath is '' for a domain root, or '/repo-name' under a GitHub Pages subpath.
   const nf = notFound();
   writeFileSync(
     join(dist, nf.file),
-    layout(nf).replace(/(href|src)="(?!https?:|mailto:|tel:|#|\/)/g, '$1="/'),
+    layout(nf).replace(/(href|src)="(?!https?:|mailto:|tel:|#|\/)/g, `$1="${basePath}/`),
   );
 
   const today = new Date().toISOString().slice(0, 10);

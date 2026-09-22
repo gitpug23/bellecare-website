@@ -1,0 +1,14 @@
+{
+  "name": "bellecare-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static marketing site for BelleCare Health and Diagnostic Center, Bacolod City",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node build.mjs --serve"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

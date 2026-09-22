@@ -1,0 +1,6 @@
+# Build output: run `npm run build` (or `npm start`) to regenerate it.
+dist/
+
+# OS and editor cruft
+.DS_Store
+*.log
